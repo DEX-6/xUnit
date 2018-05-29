@@ -31,7 +31,7 @@ public class CreateNewFileTest {
     * Проверка 1, что можносоздать один файл
     * Проверка 2, что файл создан в нужной директории
     * */
-    @Test()
+    @Test(groups = {"positive"})
     public void checkPath() throws IOException {
         String fileName = "TempFile_1";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
@@ -50,7 +50,7 @@ public class CreateNewFileTest {
     /*
      * Негативный тест, что нельзя создать файл с одним и тем же названием в одной и той же директории дважды
      */
-    @Test()
+    @Test(groups = {"negative"})
     public void checkDoubleFileCreationTest() throws IOException {
         String fileName = "TempFile_2";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
@@ -65,11 +65,11 @@ public class CreateNewFileTest {
         boolean secondFileCreationResult = file_2.createNewFile();
 
         Assert.assertTrue(!secondFileCreationResult);
-        System.out.println("Проверка повторного создания выполненга. Повторного создания файла не произошло");
+        System.out.println("Проверка повторного создания выполнена. Повторного создания файла не произошло");
 
     }
 
-    @Test()
+    @Test(groups = {"negative"})
     public void checkCreationFileinFakeDirectory()  {
         String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
