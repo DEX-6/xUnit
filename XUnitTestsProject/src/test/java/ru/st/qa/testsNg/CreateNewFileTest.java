@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,18 +34,22 @@ public class CreateNewFileTest {
     * */
     @Test(groups = {"positive"})
     public void checkPath() throws IOException {
+        SoftAssert softAssert = new SoftAssert();
         String fileName = "TempFile_1";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
-        Assert.assertTrue(firstFileCreationResult);
+        softAssert.assertTrue(firstFileCreationResult, "Проверка создания файла!!!!");
         System.out.println("Проверка создания файла выполнена");
         System.out.println("Получаем путь файла");
         String parentPath = file_1.getParent();
         String pathString = path.toString();
         System.out.println(String.format("Путь файла = \"%s\"", pathString));
-        Assert.assertTrue(pathString.equals(parentPath));
+        softAssert.assertTrue(pathString.equals(parentPath));
+        softAssert.assertEquals(parentPath, pathString, "Проверка пути!!!!!!!!");
         System.out.println("Проверка нахождения в нужной директории выполнена");
+        softAssert.assertAll();
+        System.out.println("Собираем результаты выполнения проверок");
     }
 
     /*
@@ -70,19 +75,19 @@ public class CreateNewFileTest {
     }
 
     @Test(groups = {"negative"})
-    public void checkCreationFileinFakeDirectory()  {
+    public void checkCreationFileinFakeDirectory() {
         String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
         boolean creationResult = false;
         File file;
-        try{
+        try {
             file = new File(fakeDirectory + "/" + fileName);
             creationResult = file.createNewFile();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        Assert.assertTrue(creationResult==false);
+        Assert.assertTrue(creationResult == false);
         System.out.println("Выполнена проверка, что нельзя создать файл в несуществующей директории");
     }
 
