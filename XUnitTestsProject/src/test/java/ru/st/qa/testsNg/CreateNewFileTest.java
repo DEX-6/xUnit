@@ -3,16 +3,20 @@ package ru.st.qa.testsNg;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by i-ru on 25.04.2018.
@@ -55,9 +59,8 @@ public class CreateNewFileTest {
     /*
      * Негативный тест, что нельзя создать файл с одним и тем же названием в одной и той же директории дважды
      */
-    @Test(groups = {"negative"})
-    public void checkDoubleFileCreationTest() throws IOException {
-        String fileName = "TempFile_2";
+    @Test(groups = {"negative"}, dataProvider = "randomFileNameGenerator")
+    public void checkDoubleFileCreationTest(String fileName) throws IOException {
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
@@ -74,9 +77,12 @@ public class CreateNewFileTest {
 
     }
 
-    @Test(groups = {"negative"})
-    public void checkCreationFileinFakeDirectory() {
-        String fileName = "TempFile_3";
+    /*
+    * Негативный тест, что нельзя создать файл в несуществующей директории
+    */
+    @Test(groups = {"negative"}, dataProvider = "externalFileNameGenerator")
+    public void checkCreationFileinFakeDirectory(String fileName) {
+//        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
         boolean creationResult = false;
@@ -113,6 +119,33 @@ public class CreateNewFileTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @DataProvider
+    public Iterator<Object[]> randomFileNameGenerator() {
+        List<Object[]> data = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            data.add(new Object[]{generateFileName()});
+        }
+        return data.iterator();
+    }
+
+    private String generateFileName(){
+        return "tempFile" + new Random().nextInt();
+    }
+
+    @DataProvider
+    public Iterator<Object[]> externalFileNameGenerator() throws IOException {
+        List<Object[]> data = new ArrayList<>();
+        File file = new File("src/test/resources/filesNamesSource.data");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        String line = reader.readLine();
+        while (line != null){
+            data.add(new Object[]{line});
+            reader.readLine();
+        }
+        reader.close();
+        return data.iterator();
     }
 
 }
