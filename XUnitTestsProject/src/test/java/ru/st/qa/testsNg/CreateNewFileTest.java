@@ -137,12 +137,11 @@ public class CreateNewFileTest {
     @DataProvider
     public Iterator<Object[]> externalFileNameGenerator() throws IOException {
         List<Object[]> data = new ArrayList<>();
-        File file = new File("src/test/resources/filesNamesSource.data");
+        File file = new File("src/test/resources/filesNamesSource.txt");
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        String line = reader.readLine();
-        while (line != null){
+        String line;
+        while ((line = reader.readLine())!= null){
             data.add(new Object[]{line});
-            reader.readLine();
         }
         reader.close();
         return data.iterator();
