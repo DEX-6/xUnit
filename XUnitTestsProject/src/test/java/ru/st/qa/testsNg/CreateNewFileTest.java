@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import ru.st.qa.testsNg.dataProviders.DataProviders;
 
 import java.io.*;
 import java.nio.file.FileVisitResult;
@@ -80,7 +81,7 @@ public class CreateNewFileTest {
     /*
     * Негативный тест, что нельзя создать файл в несуществующей директории
     */
-    @Test(groups = {"negative"}, dataProvider = "externalFileNameGenerator")
+    @Test(groups = {"negative"}, dataProviderClass = DataProviders.class, dataProvider = "externalFileNameGenerator")
     public void checkCreationFileinFakeDirectory(String fileName) {
 //        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
@@ -124,27 +125,15 @@ public class CreateNewFileTest {
     @DataProvider
     public Iterator<Object[]> randomFileNameGenerator() {
         List<Object[]> data = new ArrayList<>();
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             data.add(new Object[]{generateFileName()});
         }
         return data.iterator();
     }
 
-    private String generateFileName(){
+    private String generateFileName() {
         return "tempFile" + new Random().nextInt();
     }
 
-    @DataProvider
-    public Iterator<Object[]> externalFileNameGenerator() throws IOException {
-        List<Object[]> data = new ArrayList<>();
-        File file = new File("src/test/resources/filesNamesSource.txt");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        String line;
-        while ((line = reader.readLine())!= null){
-            data.add(new Object[]{line});
-        }
-        reader.close();
-        return data.iterator();
-    }
 
 }
