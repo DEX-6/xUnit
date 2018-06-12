@@ -1,4 +1,4 @@
-package ru.st.qa.jUnitTests;
+package ru.st.qa.jUnitTests.tests;
 
 
 import org.assertj.core.api.SoftAssertions;
@@ -6,6 +6,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import ru.st.qa.jUnitTests.categories.MyCategories.IgnoreTest;
+import ru.st.qa.jUnitTests.categories.MyCategories.NegativeTest;
+import ru.st.qa.jUnitTests.categories.MyCategories.PositiveTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +39,7 @@ public class CreateNewFileTest {
     * Проверка 2, что файл создан в нужной директории
     * */
     @Test()
+    @Category(PositiveTest.class)
     public void checkPath() throws IOException {
         SoftAssertions softAssertions = new SoftAssertions();
         String fileName = "TempFile_1";
@@ -58,6 +63,7 @@ public class CreateNewFileTest {
      * Негативный тест, что нельзя создать файл с одним и тем же названием в одной и той же директории дважды
      */
     @Test
+    @Category(NegativeTest.class)
     public void checkDoubleFileCreationTest() throws IOException {
         String fileName = "TempFile_2";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
@@ -80,6 +86,7 @@ public class CreateNewFileTest {
     * Негативный тест, что нельзя создать файл в несуществующей директории
     */
     @Test
+    @Category({NegativeTest.class, IgnoreTest.class})
     public void checkCreationFileinFakeDirectory() {
         String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
