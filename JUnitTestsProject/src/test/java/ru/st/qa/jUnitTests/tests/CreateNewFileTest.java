@@ -1,29 +1,66 @@
 package ru.st.qa.jUnitTests.tests;
 
 
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import ru.st.qa.jUnitTests.categories.MyCategories.IgnoreTest;
 import ru.st.qa.jUnitTests.categories.MyCategories.NegativeTest;
 import ru.st.qa.jUnitTests.categories.MyCategories.PositiveTest;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by i-ru on 25.04.2018.
  */
+
+@RunWith(DataProviderRunner.class)
 public class CreateNewFileTest {
     private Path path;
+
+    @DataProvider
+    public static Object[][] fileNamesGenerator() {
+        List <Object[]> names = new ArrayList<>();
+        for (int i = 0; i < 3; i++){
+            names.add(new Object[]{
+                    generateRandomFileName()
+            });
+        }
+        return  names.toArray(new Object[][]{});
+    }
+
+    @DataProvider
+    public static Object[][] externalFileNameGenerator() throws IOException {
+        List<Object[]> names = new ArrayList<>();
+        File file = new File("src/test/resources/filesNamesSource.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        String line;
+        while ((line = reader.readLine())!= null){
+            names.add(new Object[]{line});
+        }
+        reader.close();
+        return names.toArray(new Object[][]{});
+    }
+
+    private static Object generateRandomFileName(){
+        return "TempFile_" + new Random().nextInt();
+    }
 
     @Before()
     public void createTempDirectory() throws IOException {
@@ -40,9 +77,10 @@ public class CreateNewFileTest {
     * */
     @Test()
     @Category(PositiveTest.class)
-    public void checkPath() throws IOException {
+    @UseDataProvider("fileNamesGenerator")
+    public void checkPath(String fileName) throws IOException {
         SoftAssertions softAssertions = new SoftAssertions();
-        String fileName = "TempFile_1";
+//        String fileName = "TempFile_1";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
@@ -64,8 +102,9 @@ public class CreateNewFileTest {
      */
     @Test
     @Category(NegativeTest.class)
-    public void checkDoubleFileCreationTest() throws IOException {
-        String fileName = "TempFile_2";
+    @UseDataProvider("externalFileNameGenerator")
+    public void checkDoubleFileCreationTest(String fileName) throws IOException {
+//        String fileName = "TempFile_2";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
@@ -87,8 +126,9 @@ public class CreateNewFileTest {
     */
     @Test
     @Category({NegativeTest.class, IgnoreTest.class})
-    public void checkCreationFileinFakeDirectory() {
-        String fileName = "TempFile_3";
+    @UseDataProvider("fileNamesGenerator")
+    public void checkCreationFileinFakeDirectory(String fileName) {
+//        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
         boolean creationResult = false;
