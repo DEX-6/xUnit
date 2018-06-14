@@ -5,11 +5,9 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import ru.st.qa.jUnitTests.categories.MyCategories.IgnoreTest;
 import ru.st.qa.jUnitTests.categories.MyCategories.NegativeTest;
@@ -62,12 +60,7 @@ public class CreateNewFileTest {
         return "TempFile_" + new Random().nextInt();
     }
 
-    @Before()
-    public void createTempDirectory() throws IOException {
-        System.out.println("--------------------------------------------------");
-        path = Files.createTempDirectory("temporaTemporis");
-        System.out.println(String.format("Создана директория \"%s\"", path));
-    }
+
 
 
     /*
@@ -143,27 +136,37 @@ public class CreateNewFileTest {
         System.out.println("Выполнена проверка, что нельзя создать файл в несуществующей директории");
     }
 
-    @After()
-    public void deleteDirectory() throws IOException {
-        try {
-            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    System.out.println("Удален файл " + file.toString());
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    System.out.println("Удалена директория " + dir.toString());
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Rule
+    public final ExternalResource externalResource = new ExternalResource() {
+        @Override
+        protected void before() throws Throwable {
+            System.out.println("--------------------------------------------------");
+            path = Files.createTempDirectory("temporaTemporis");
+            System.out.println(String.format("Создана директория \"%s\"", path));
         }
-    }
+
+        @Override
+        protected void after() {
+            try {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        System.out.println("Удален файл " + file.toString());
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        System.out.println("Удалена директория " + dir.toString());
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
 }
