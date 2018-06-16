@@ -1,4 +1,4 @@
-package ru.st.qa.jUnitTests.drafts;
+package ru.st.qa.jUnitTests.drafts.rules;
 
 import org.junit.rules.ExternalResource;
 

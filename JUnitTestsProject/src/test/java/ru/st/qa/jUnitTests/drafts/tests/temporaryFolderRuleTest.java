@@ -1,4 +1,4 @@
-package ru.st.qa.jUnitTests.drafts;
+package ru.st.qa.jUnitTests.drafts.tests;
 
 import org.junit.Rule;
 import org.junit.Test;

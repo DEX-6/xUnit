@@ -1,11 +1,12 @@
-package ru.st.qa.jUnitTests.drafts;
+package ru.st.qa.jUnitTests.drafts.tests;
 
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.runners.MethodSorters;
+import ru.st.qa.jUnitTests.drafts.categories.Unstable;
+import ru.st.qa.jUnitTests.drafts.rules.ReusableRule;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Test_1_WithExternalResource_Reusable {
@@ -21,6 +22,7 @@ public class Test_1_WithExternalResource_Reusable {
     }
 
     @Test
+    @Unstable(countOfRetry = 3)
     public void aTestMethod2() {
         System.out.println(className + " test method 2");
     }

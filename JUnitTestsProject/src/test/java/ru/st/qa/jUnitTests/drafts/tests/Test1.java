@@ -1,4 +1,4 @@
-package ru.st.qa.jUnitTests.drafts;
+package ru.st.qa.jUnitTests.drafts.tests;
 
 import org.junit.After;
 import org.junit.Before;
@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class Test2 {
+public class Test1 {
 
-    private String className = Test2.class.getSimpleName();
+    private String className = Test1.class.getSimpleName();
 
     @Before
     public void setUp(){
