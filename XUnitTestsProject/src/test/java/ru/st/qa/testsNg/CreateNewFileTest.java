@@ -43,8 +43,9 @@ public class CreateNewFileTest {
         String fileName = "TempFile_1";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
-        boolean firstFileCreationResult = file_1.createNewFile();
-        softAssert.assertTrue(firstFileCreationResult, "Проверка создания файла!!!!");
+        file_1.createNewFile();
+        boolean isFileCreated = file_1.exists();
+        softAssert.assertTrue(isFileCreated, "Проверка создания файла!!!!");
         System.out.println("Проверка создания файла выполнена");
         System.out.println("Получаем путь файла");
         String parentPath = file_1.getParent();
@@ -86,15 +87,17 @@ public class CreateNewFileTest {
 //        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
-        boolean creationResult = false;
-        File file;
+        boolean isFileCreated = false;
+        File file = null;
         try {
             file = new File(fakeDirectory + "/" + fileName);
-            creationResult = file.createNewFile();
+            file.createNewFile();
+            isFileCreated = file.exists();
         } catch (IOException e) {
+            isFileCreated = file.exists();
             System.out.println(e.getMessage());
         }
-        Assert.assertTrue(creationResult == false);
+        Assert.assertTrue(isFileCreated == false);
         System.out.println("Выполнена проверка, что нельзя создать файл в несуществующей директории");
     }
 
