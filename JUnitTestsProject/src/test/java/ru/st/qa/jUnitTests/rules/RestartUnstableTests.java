@@ -1,10 +1,10 @@
-package ru.st.qa.jUnitTests.drafts.rules;
+package ru.st.qa.jUnitTests.rules;
 
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import ru.st.qa.jUnitTests.drafts.categories.Unstable;
+import ru.st.qa.jUnitTests.annotations.Unstable;
 
 public class RestartUnstableTests extends TestWatcher implements TestRule {
     @Override

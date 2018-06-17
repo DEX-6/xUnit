@@ -1,4 +1,4 @@
-package ru.st.qa.jUnitTests.drafts.categories;
+package ru.st.qa.jUnitTests.annotations;
 
 import java.lang.annotation.*;
 

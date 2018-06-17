@@ -5,7 +5,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.runners.MethodSorters;
-import ru.st.qa.jUnitTests.drafts.categories.Unstable;
+import ru.st.qa.jUnitTests.annotations.Unstable;
 import ru.st.qa.jUnitTests.drafts.rules.ReusableRule;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
