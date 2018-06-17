@@ -9,9 +9,11 @@ import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
+import ru.st.qa.jUnitTests.annotations.DataSource;
 import ru.st.qa.jUnitTests.categories.MyCategories.IgnoreTest;
 import ru.st.qa.jUnitTests.categories.MyCategories.NegativeTest;
 import ru.st.qa.jUnitTests.categories.MyCategories.PositiveTest;
+import ru.st.qa.jUnitTests.dataProviders.UniversalDataProviders;
 
 import java.io.*;
 import java.nio.file.FileVisitResult;
@@ -31,38 +33,6 @@ import java.util.Random;
 @RunWith(DataProviderRunner.class)
 public class CreateNewFileTest {
     private Path path;
-
-    @DataProvider
-    public static Object[][] fileNamesGenerator() {
-        List <Object[]> names = new ArrayList<>();
-        for (int i = 0; i < 3; i++){
-            names.add(new Object[]{
-                    generateRandomFileName()
-            });
-        }
-        return  names.toArray(new Object[][]{});
-    }
-
-    @DataProvider
-    public static Object[][] externalFileNameGenerator() throws IOException {
-        List<Object[]> names = new ArrayList<>();
-        File file = new File("src/test/resources/filesNamesSource.txt");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        String line;
-        while ((line = reader.readLine())!= null){
-            names.add(new Object[]{line});
-        }
-        reader.close();
-        return names.toArray(new Object[][]{});
-    }
-
-    private static Object generateRandomFileName(){
-        return "TempFile_" + new Random().nextInt();
-    }
-
-
-
-
     /*
     * Позитивный тест,
     * Проверка 1, что можносоздать один файл
@@ -70,10 +40,10 @@ public class CreateNewFileTest {
     * */
     @Test()
     @Category(PositiveTest.class)
-    @UseDataProvider("fileNamesGenerator")
+    @UseDataProvider(value = "dataSourceLoader", location = UniversalDataProviders.class)
+    @DataSource(value = "/filesNamesSource.txt", type = DataSource.Type.RESOURCE)
     public void checkPath(String fileName) throws IOException {
         SoftAssertions softAssertions = new SoftAssertions();
-//        String fileName = "TempFile_1";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
@@ -95,9 +65,9 @@ public class CreateNewFileTest {
      */
     @Test
     @Category(NegativeTest.class)
-    @UseDataProvider("externalFileNameGenerator")
+    @UseDataProvider(value = "dataSourceLoader", location = UniversalDataProviders.class)
+    @DataSource(value = "/filesNamesSource.txt", type = DataSource.Type.RESOURCE)
     public void checkDoubleFileCreationTest(String fileName) throws IOException {
-//        String fileName = "TempFile_2";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         File file_1 = new File(path.toString() + "/" + fileName);
         boolean firstFileCreationResult = file_1.createNewFile();
@@ -119,9 +89,10 @@ public class CreateNewFileTest {
     */
     @Test
     @Category({NegativeTest.class, IgnoreTest.class})
-    @UseDataProvider("fileNamesGenerator")
+    @UseDataProvider(value = "dataSourceLoader", location = UniversalDataProviders.class)
+    @DataSource(value = "/filesNamesSource.txt", type = DataSource.Type.RESOURCE)
+
     public void checkCreationFileinFakeDirectory(String fileName) {
-//        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
         boolean creationResult = false;
