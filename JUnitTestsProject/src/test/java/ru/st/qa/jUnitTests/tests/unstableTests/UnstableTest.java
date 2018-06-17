@@ -21,9 +21,10 @@ public class UnstableTest {
     @Test
     @Unstable(countOfRetry = 5)
     public void randomlyFailingTest_1() {
+        System.out.println("Test 1 is running");
         if (attempt == 5) {
             attempt = 1;
-
+            System.out.println("Success!");
         } else {
             Assert.fail("Failed on " + (attempt++) + " attempt");
         }
@@ -37,7 +38,7 @@ public class UnstableTest {
         System.out.println("Test 2 is running");
         if (attempt == 2) {
             attempt = 1;
-
+            System.out.println("Success!");
         } else {
             Assert.fail("Failed on " + (attempt++) + " attempt");
         }
