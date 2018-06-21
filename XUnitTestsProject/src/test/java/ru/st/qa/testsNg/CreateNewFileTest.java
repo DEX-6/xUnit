@@ -83,7 +83,7 @@ public class CreateNewFileTest {
     * Негативный тест, что нельзя создать файл в несуществующей директории
     */
     @Test(groups = {"negative"}, dataProviderClass = DataProviders.class, dataProvider = "externalFileNameGenerator")
-    public void checkCreationFileinFakeDirectory(String fileName) {
+    public void checkCreationFileinFakeDirectory(String fileName) throws Throwable {
 //        String fileName = "TempFile_3";
         System.out.println(String.format("Создаем первый файл с именем %s", fileName));
         String fakeDirectory = "qwerty";
@@ -93,6 +93,9 @@ public class CreateNewFileTest {
             file = new File(fakeDirectory + "/" + fileName);
             file.createNewFile();
             isFileCreated = file.exists();
+            if (isFileCreated){
+                throw new Throwable("Должно быть выброшено исключение типа IOException!");
+            }
         } catch (IOException e) {
             isFileCreated = file.exists();
             System.out.println(e.getMessage());
