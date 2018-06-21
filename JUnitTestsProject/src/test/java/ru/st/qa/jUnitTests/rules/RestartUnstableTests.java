@@ -26,7 +26,9 @@ public class RestartUnstableTests extends TestWatcher implements TestRule {
     public class RerunStatement extends Statement {
         private final Statement base;
         private Description desc;
-        int attampt = 0;
+        int attempt = 0;
+        boolean isSuccess = false;
+
 
         public RerunStatement(Statement base, Description desc) {
             this.base = base;
@@ -36,20 +38,24 @@ public class RestartUnstableTests extends TestWatcher implements TestRule {
         @Override
         public void evaluate() throws Throwable {
             Unstable unstable = desc.getAnnotation(Unstable.class);
-            boolean isSuccess = false;
             if (unstable != null) {
-                while (!isSuccess && attampt < unstable.countOfRetry()) {
+                if (!isSuccess && attempt < unstable.countOfRetry()) {
                     try {
                         base.evaluate();
                         isSuccess = true;
                     } catch (Throwable t) {
-                        System.out.println("Failed on " + (attampt + 1) + " attampt" + desc);
+                        System.out.println("Failed on the " + (attempt + 1) + " attempt " + desc);
                         isSuccess = false;
-                        attampt++;
+                        attempt++;
                         evaluate();
                     }
-                    attampt++;
+                    attempt++;
+                    if (attempt > unstable.countOfRetry()){
+                        throw new Throwable("Test is failed! Number of attempts exceeded");
+                    }
                 }
+            } else {
+                base.evaluate();
             }
         }
     }

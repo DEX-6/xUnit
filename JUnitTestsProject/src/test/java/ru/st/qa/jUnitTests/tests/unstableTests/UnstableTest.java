@@ -16,13 +16,13 @@ public class UnstableTest {
     public TestRule restartUnstableTests = new RestartUnstableTests();
 
     /*
-     * Тест запускается, т. к. согласно правилу имеет аннотацию @Unstable
+     * Тест перезапускается заданное количество раз, т. к. согласно правилу имеет аннотацию @Unstable
      * */
     @Test
     @Unstable(countOfRetry = 5)
     public void randomlyFailingTest_1() {
         System.out.println("Test 1 is running");
-        if (attempt == 5) {
+        if (attempt == 3) {
             attempt = 1;
             System.out.println("Success!");
         } else {
@@ -31,16 +31,11 @@ public class UnstableTest {
     }
 
     /*
-     * Тест не запускается, т. к. не имеет аннотации @Unstable
+     * Тест запускается в обычном режиме
      * */
     @Test
-    public void randomlyFailingTest_2() {
+    public void stableTest() {
         System.out.println("Test 2 is running");
-        if (attempt == 2) {
-            attempt = 1;
             System.out.println("Success!");
-        } else {
-            Assert.fail("Failed on " + (attempt++) + " attempt");
-        }
     }
 }
