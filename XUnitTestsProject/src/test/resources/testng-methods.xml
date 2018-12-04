@@ -10,8 +10,8 @@
             </class>
             <class name="ru.st.qa.testsNg.CreateNewFileTest">
                 <methods>
-                    <!--<include name="createFileOnceTest"></include>-->
-                    <exclude name="createFileOnceTest"></exclude>
+                    <include name="checkPath"></include>
+                    <!--<exclude name="createFileOnceTest"></exclude>-->
                 </methods>
             </class>
         </classes>
